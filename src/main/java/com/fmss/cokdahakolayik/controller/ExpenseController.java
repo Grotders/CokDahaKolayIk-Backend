@@ -21,9 +21,8 @@ public class ExpenseController {
     private final ExpenseService expenseService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<ExpenseDto> addExpense(@Valid @RequestBody CreateExpenseRequest expenseRequest) {
-        return ResponseEntity.ok(expenseService.addExpense(expenseRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(expenseService.addExpense(expenseRequest));
     }
 
     @GetMapping

@@ -21,9 +21,8 @@ public class EmployeeController {
     private final EmployeeService employeeService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<EmployeeDto> createEmployee(@Valid @RequestBody CreateEmployeeRequest employeeRequest) {
-        return ResponseEntity.ok(employeeService.createEmployee(employeeRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(employeeService.createEmployee(employeeRequest));
     }
 
     @GetMapping

@@ -20,9 +20,8 @@ public class LeaveController {
     private final LeaveService leaveService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<LeaveDto> addLeave(@Valid @RequestBody CreateLeaveRequest leaveRequest){
-        return ResponseEntity.ok(leaveService.addLeave(leaveRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(leaveService.addLeave(leaveRequest));
     }
 
     @GetMapping

@@ -23,9 +23,8 @@ public class OvertimeController {
     private final OvertimeService overtimeService;
 
     @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<OvertimeDto> addOvertime(@Valid @RequestBody CreateOvertimeRequest overtimeRequest) {
-        return ResponseEntity.ok(overtimeService.addOvertime(overtimeRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(overtimeService.addOvertime(overtimeRequest));
     }
 
     @GetMapping

@@ -13,9 +13,9 @@ public interface LeaveRepository extends JpaRepository<Leave, Long> {
 
     List<Leave> findAllByEmployee_Id(Long employeeId, Pageable pageable);
 
-//    @Query(value = "update Leave as l set l.type =: #{#leave.type}, l.description =: #{#leave.description}," +
-//            "l.startDate =: #{#leave.startDate}, l.endDate =: #{#leave.endDate}, l.totalDay =: #{#leave.totalDay} " +
-//            "where l.id =: #{#leaveId}", nativeQuery = true)
-//    Leave updateLeaveById(@Param("leaveId") Long leaveId, @Param("leave") Leave leave);
+    @Query(value = "update Leave as l set l.type =: #{#leave.type}, l.description = :#{#leave.description}," +
+            "l.startDate =: #{#leave.startDate}, l.endDate =: #{#leave.endDate}, l.totalDay =: #{#leave.totalDay} " +
+            "where l.id =: #{#leaveId}", nativeQuery = true)
+    Leave updateLeaveById(@Param("leaveId") Long leaveId, @Param("leave") Leave leave);
 
 }
