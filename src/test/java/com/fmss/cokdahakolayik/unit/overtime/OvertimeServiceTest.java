@@ -131,7 +131,7 @@ public class OvertimeServiceTest extends BaseUnitTest {
 
         when(overtimeRepository.findById(any())).thenReturn(Optional.of(overtime));
         when(overtimeMapper.updateOvertime(any(), any())).thenReturn(updatedOvertime);
-        when(overtimeRepository.updateOvertimeById(OVERTIME_ID, updatedOvertime)).thenReturn(updatedOvertime);
+        when(overtimeRepository.save(any())).thenReturn(updatedOvertime);
         when(overtimeMapper.toOvertimeDto(any())).thenReturn(overtimeDto);
 
         OvertimeDto result = overtimeService.updateOvertime(OVERTIME_ID, updateOvertimeRequest);
@@ -139,7 +139,7 @@ public class OvertimeServiceTest extends BaseUnitTest {
 
         verify(overtimeRepository).findById(OVERTIME_ID);
         verify(overtimeMapper).updateOvertime(overtime, updateOvertimeRequest);
-        verify(overtimeRepository).updateOvertimeById(OVERTIME_ID, updatedOvertime);
+        verify(overtimeRepository).save(updatedOvertime);
         verify(overtimeMapper).toOvertimeDto(updatedOvertime);
     }
 
@@ -149,7 +149,7 @@ public class OvertimeServiceTest extends BaseUnitTest {
         assertThrows(GeneralException.class, () -> overtimeService.updateOvertime(OVERTIME_ID, updateOvertimeRequest));
         verify(overtimeRepository).findById(OVERTIME_ID);
         verifyNoInteractions(overtimeMapper);
-        verify(overtimeRepository, never()).updateOvertimeById(any(), any());
+        verify(overtimeRepository, never()).save(any());
     }
 
     @Test

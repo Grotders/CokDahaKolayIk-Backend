@@ -141,7 +141,7 @@ class ExpenseServiceTest extends BaseUnitTest {
 
         when(expenseRepository.findById(any())).thenReturn(Optional.of(expense));
         when(expenseMapper.updateExpense(any(), any())).thenReturn(updatedExpense);
-        when(expenseRepository.updateExpenseById(EXPENSE_ID, updatedExpense)).thenReturn(updatedExpense);
+        when(expenseRepository.save(any())).thenReturn(updatedExpense);
         when(expenseMapper.toExpenseDto(any())).thenReturn(expenseDto);
 
         ExpenseDto result = expenseService.updateExpense(EXPENSE_ID, updateExpenseRequest);
@@ -149,7 +149,7 @@ class ExpenseServiceTest extends BaseUnitTest {
 
         verify(expenseRepository).findById(EXPENSE_ID);
         verify(expenseMapper).updateExpense(expense, updateExpenseRequest);
-        verify(expenseRepository).updateExpenseById(EXPENSE_ID, updatedExpense);
+        verify(expenseRepository).save(updatedExpense);
         verify(expenseMapper).toExpenseDto(updatedExpense);
     }
 
@@ -159,7 +159,7 @@ class ExpenseServiceTest extends BaseUnitTest {
         assertThrows(GeneralException.class, () -> expenseService.updateExpense(EXPENSE_ID, updateExpenseRequest));
         verify(expenseRepository).findById(EXPENSE_ID);
         verifyNoInteractions(expenseMapper);
-        verify(expenseRepository, never()).updateExpenseById(any(), any());
+        verify(expenseRepository, never()).save(any());
     }
 
     @Test

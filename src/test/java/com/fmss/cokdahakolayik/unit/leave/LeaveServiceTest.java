@@ -132,7 +132,7 @@ class LeaveServiceTest extends BaseUnitTest {
 
         when(leaveRepository.findById(any())).thenReturn(Optional.of(leave));
         when(leaveMapper.updateLeave(any(), any())).thenReturn(updatedLeave);
-        when(leaveRepository.updateLeaveById(LEAVE_ID, updatedLeave)).thenReturn(updatedLeave);
+        when(leaveRepository.save(updatedLeave)).thenReturn(updatedLeave);
         when(leaveMapper.toLeaveDto(any())).thenReturn(leaveDto);
 
         LeaveDto result = leaveService.updateLeave(LEAVE_ID, updateLeaveRequest);
@@ -140,7 +140,7 @@ class LeaveServiceTest extends BaseUnitTest {
 
         verify(leaveRepository).findById(LEAVE_ID);
         verify(leaveMapper).updateLeave(leave, updateLeaveRequest);
-        verify(leaveRepository).updateLeaveById(LEAVE_ID, updatedLeave);
+        verify(leaveRepository).save(updatedLeave);
         verify(leaveMapper).toLeaveDto(updatedLeave);
     }
 
@@ -150,7 +150,7 @@ class LeaveServiceTest extends BaseUnitTest {
         assertThrows(GeneralException.class, () -> leaveService.updateLeave(LEAVE_ID, updateLeaveRequest));
         verify(leaveRepository).findById(LEAVE_ID);
         verifyNoInteractions(leaveMapper);
-        verify(leaveRepository, never()).updateLeaveById(any(), any());
+        verify(leaveRepository, never()).save(any());
     }
 
     @Test
