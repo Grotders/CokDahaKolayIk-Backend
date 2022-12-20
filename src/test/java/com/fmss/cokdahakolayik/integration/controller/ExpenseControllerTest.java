@@ -1,6 +1,8 @@
 package com.fmss.cokdahakolayik.integration.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fmss.cokdahakolayik.client.dto.request.CreateExpenseRequest;
+import com.fmss.cokdahakolayik.client.dto.request.UpdateExpenseRequest;
 import com.fmss.cokdahakolayik.client.dto.response.ExpenseDto;
 import com.fmss.cokdahakolayik.controller.ExpenseController;
 import com.fmss.cokdahakolayik.integration.BaseIntegrationTest;
@@ -21,8 +23,7 @@ import java.util.stream.IntStream;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
@@ -62,7 +63,7 @@ class ExpenseControllerTest extends BaseIntegrationTest {
         this.mockMvc.perform(post(EXPENSE_API_ENDPOINT)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(request)))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isCreated())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.type", is(expected.type())))
@@ -80,7 +81,7 @@ class ExpenseControllerTest extends BaseIntegrationTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(request)))
                 .andExpect(status().isNotAcceptable())
-                .andExpect(content().string("Harcama eklenecek çal??an bulunamad?."))
+                .andExpect(content().string("Harcama eklenecek çalisan bulunamadi."))
                 .andReturn();
     }
 
@@ -98,18 +99,19 @@ class ExpenseControllerTest extends BaseIntegrationTest {
 
     @Test
     void getExpenses() throws Exception {
-        mockMvc.perform(get(EXPENSE_API_ENDPOINT + "/" + EMPLOYEE_ID))
+        mockMvc.perform(get(EXPENSE_API_ENDPOINT +"?employeeId=" + EMPLOYEE_ID + "&page=" + "1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.size()", is(5)));
+                .andReturn();
     }
 
     @Test
-    void getExpense() throws Exception {
-        ExpenseDto expected = ExpenseUtil.generateExpenseDto(EXPENSE_ID);
+    void getExpense_ValidExpenseId() throws Exception {
+        ExpenseDto expected = ExpenseUtil.generateExpenseDto(null);
 
         mockMvc.perform(get(EXPENSE_API_ENDPOINT +"/" + EXPENSE_ID))
-                .andExpect(status().is2xxSuccessful())
+                .andDo(System.out::println)
+                .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id", notNullValue()))
                 .andExpect(jsonPath("$.type", is(expected.type())))
@@ -118,12 +120,46 @@ class ExpenseControllerTest extends BaseIntegrationTest {
                 .andExpect(jsonPath("$.description", is(expected.description())))
                 .andReturn();
     }
-//    @Disabled
-//    @Test
-//    void updateExpense() {
-//    }
-//    @Disabled
-//    @Test
-//    void deleteExpense() {
-//    }
+
+    @Test
+    void getExpense_InvalidExpenseId() throws Exception {
+        mockMvc.perform(get(EXPENSE_API_ENDPOINT +"/" + Long.MAX_VALUE))
+                .andDo(System.out::println)
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().string("Harcama bulunamadi."))
+                .andReturn();
+    }
+
+    @Test
+    void updateExpense() throws Exception {
+        UpdateExpenseRequest request = ExpenseUtil.generateUpdateExpenseRequest(EMPLOYEE_ID+1);
+        ExpenseDto expected = ExpenseUtil.generateExpenseDto2(EXPENSE_ID+1);
+
+        mockMvc.perform(put(EXPENSE_API_ENDPOINT + "/" + EXPENSE_ID+1)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(mapper.writer().withDefaultPrettyPrinter().writeValueAsString(request)))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.id", notNullValue()))
+                .andExpect(jsonPath("$.type", is(expected.type())))
+                .andExpect(jsonPath("$.amount", is(expected.amount())))
+//                .andExpect(jsonPath("$.receiptDate", is(expenseDto.receiptDate())))
+                .andExpect(jsonPath("$.description", is(expected.description())))
+                .andReturn();    }
+
+
+    @Test
+    void deleteExpense_ExpenseExistsInDatabase() throws Exception {
+        mockMvc.perform(delete(EXPENSE_API_ENDPOINT + "/" + INSTANCE_WITH_THIS_ID_WILL_BE_DELETED_IN_TEST ))
+                .andExpect(status().isNoContent())
+                .andReturn();
+    }
+
+    @Test
+    void deleteExpense_ExpenseDoesNotExistsInDatabase() throws Exception {
+        mockMvc.perform(delete(EXPENSE_API_ENDPOINT + "/" + Long.MAX_VALUE ))
+                .andExpect(status().isNotAcceptable())
+                .andExpect(content().string("Silinecek harcama bulunamadi."))
+                .andReturn();
+    }
 }

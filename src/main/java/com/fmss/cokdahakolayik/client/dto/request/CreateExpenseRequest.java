@@ -8,9 +8,9 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record CreateExpenseRequest(@NotBlank(message = "Harcama türü boş olamaz.")String type,
-                                   @Min(value = 1, message = "Harcama miktarı daha büyük olmalı.")Double amount,
+public record CreateExpenseRequest(@NotBlank(message = "Harcama turu bos olamaz.")String type,
+                                   @Min(value = 1, message = "Harcama miktari daha buyuk olmali.")Double amount,
                                    LocalDate receiptDate,
-                                   @NotBlank(message = "Harcama açıklaması boş olamaz.")String description,
-                                   @NotNull(message = "Beklenmeyen hata oluştu.") Long employeeId) {
+                                   @NotBlank(message = "Harcama aciklamasi bos olamaz.")String description,
+                                   @NotNull(message = "Beklenmeyen hata olustu.") Long employeeId) {
 }

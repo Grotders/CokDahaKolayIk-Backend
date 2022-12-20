@@ -29,13 +29,15 @@ public class GeneralExceptionAdvisor extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
     }
 
+    // 406
     @ExceptionHandler(GeneralException.class)
     public ResponseEntity<?> generalExceptionHandler(GeneralException exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_ACCEPTABLE);
     }
 
+    // 500
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<?> generalExceptionHandler(Exception exception) {
+    public ResponseEntity<?> exceptionHandler(Exception exception) {
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

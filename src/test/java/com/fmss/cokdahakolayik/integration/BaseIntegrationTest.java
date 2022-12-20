@@ -3,13 +3,7 @@ package com.fmss.cokdahakolayik.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.fmss.cokdahakolayik.reposity.EmployeeRepository;
-import com.fmss.cokdahakolayik.unit.BaseUnitTest;
 import org.junit.jupiter.api.BeforeEach;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpHeaders;
 
 import java.time.LocalDate;
 
@@ -25,8 +19,9 @@ public class BaseIntegrationTest {
     public final Long EXPENSE_ID = 3L;
     public final Long OVERTIME_ID = 3L;
     public final Long EMPLOYEE_ID = 1L;
+    public final Long INSTANCE_WITH_THIS_ID_WILL_BE_DELETED_IN_TEST = 1L;
+    public final int NUMBER_OF_INSTANCE = 11;
 
-    public final int NUMBER_OF_INSTANCE = 5;
 
     public static final LocalDate getDate = LocalDate.now();
     public final ObjectMapper mapper = new ObjectMapper();

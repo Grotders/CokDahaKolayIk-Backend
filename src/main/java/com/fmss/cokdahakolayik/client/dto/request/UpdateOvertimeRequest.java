@@ -8,9 +8,8 @@ import lombok.Builder;
 import java.time.LocalDate;
 
 @Builder
-public record UpdateOvertimeRequest(
-                                    LocalDate overtimeDate,
-                                    @Min(value = 1, message = "Mesai süresi daha büyük olmalı.") Double amountOvertime,
-                                    @NotBlank(message = "Mesai açıklaması boş olamaz.") String description,
-                                    @NotNull(message = "Beklenmeyen hata oluştu.")Long employeeId) {
+public record UpdateOvertimeRequest(LocalDate overtimeDate,
+                                    @Min(value = 1, message = "Mesai suresi daha buyuk olmali.") Double amountOvertime,
+                                    @NotBlank(message = "Mesai açiklamasi bos olamaz.") String description,
+                                    @NotNull(message = "Beklenmeyen hata olustu.")Long employeeId) {
 }

@@ -29,7 +29,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseDto addExpense(CreateExpenseRequest expenseRequest) {
         boolean doesExist = this.employeeRepository.existsById(expenseRequest.employeeId());
         if (!doesExist)
-            throw new GeneralException("Harcama eklenecek çalışan bulunamadı.");
+            throw new GeneralException("Harcama eklenecek çalisan bulunamadi.");
 
         return this.expenseMapper.toExpenseDto(
                 this.expenseRepository.save(
@@ -45,7 +45,7 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .toList();
 
         if (expenses.isEmpty())
-            throw new GeneralException("Harcamalar bulunamadı.");
+            throw new GeneralException("Harcamalar bulunamadi.");
         return expenses;
     }
 
@@ -54,7 +54,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseDto getExpense(Long expenseId) {
         return this.expenseRepository.findById(expenseId)
                     .map(this.expenseMapper::toExpenseDto)
-                .orElseThrow(() -> new GeneralException("Harcama bulunamadı."));
+                .orElseThrow(() -> new GeneralException("Harcama bulunamadi."));
     }
 
     @ToLog
@@ -62,7 +62,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public ExpenseDto updateExpense(Long expenseId, UpdateExpenseRequest expenseRequest) {
         Expense updatedExpense = this.expenseRepository.findById(expenseId)
                 .map(expense -> this.expenseMapper.updateExpense(expense, expenseRequest))
-                .orElseThrow(() -> new GeneralException("Harcama güncellenemedi."));
+                .orElseThrow(() -> new GeneralException("Harcama guncellenemedi."));
 //        updatedExpense = this.expenseRepository.updateExpenseById(expenseId, updatedExpense);
         updatedExpense = this.expenseRepository.save(updatedExpense);
         return this.expenseMapper.toExpenseDto(updatedExpense);
@@ -73,7 +73,7 @@ public class ExpenseServiceImpl implements ExpenseService {
     public void deleteExpense(Long expenseId) {
         boolean doesExist = this.expenseRepository.existsById(expenseId);
         if (!doesExist)
-            throw new GeneralException("Silinecek harcama bulunamadı.");
+            throw new GeneralException("Silinecek harcama bulunamadi.");
         this.expenseRepository.deleteById(expenseId);
     }
 }
